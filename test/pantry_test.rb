@@ -149,7 +149,37 @@ class PantryTest < Minitest::Test
     assert_equal expected, actual
   end
 
-  def test_how_man
+  def test_how_many_can_i_make
+    p = Pantry.new
+
+    r1 = Recipe.new("Cheese Pizza")
+    r1.add_ingredient("Cheese", 20)
+    r1.add_ingredient("Flour", 20)
+
+    r2 = Recipe.new("Pickles")
+    r2.add_ingredient("Brine", 10)
+    r2.add_ingredient("Cucumbers", 30)
+
+    r3 = Recipe.new("Peanuts")
+    r3.add_ingredient("Raw nuts", 10)
+    r3.add_ingredient("Salt", 10)
+
+    p.add_to_cookbook(r1)
+    p.add_to_cookbook(r2)
+    p.add_to_cookbook(r3)
+
+    p.restock("Cheese", 10)
+    p.restock("Flour", 20)
+    p.restock("Brine", 40)
+    p.restock("Pickles", 40)
+    p.restock("Raw nuts", 20)
+    p.restock("Salt", 20)
+    p.restock("Cucumbers", 30)
+
+    actual = p.how_many_can_i_make
+    expected = {"Pickles" => 1, "Peanuts" => 2}
+
+    assert_equal expected, actual
     
   end
 end

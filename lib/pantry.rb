@@ -62,6 +62,20 @@ class Pantry
       @stock.keys.include?(k) && @stock[k] >= v
     end
   end
+
+  def how_many_can_i_make
+    possibilities = find_recipies
+    per = possibilities.map do |recipe|
+      how_many_per(recipe)
+    end
+    possibilities.map{|recipe|recipe.name}.zip(per).to_h
+  end
+
+  def how_many_per(recipe)
+    recipe.ingredients.map do |k, v|
+      @stock[k]/v
+    end.min
+  end
   
   private
 
