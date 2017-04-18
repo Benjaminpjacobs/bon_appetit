@@ -134,6 +134,16 @@ class PantryTest < Minitest::Test
     p.add_to_cookbook(r1)
     p.add_to_cookbook(r2)
     p.add_to_cookbook(r3)
+
+    p.restock("Cheese", 10)
+    p.restock("Flour", 20)
+    p.restock("Brine", 40)
+    p.restock("Pickles", 40)
+    p.restock("Raw nuts", 20)
+    p.restock("Salt", 20)
+
+    actual = p.what_can_i_make
+    expected = ["Pickles", "Peanuts"]
     
   end
 end
