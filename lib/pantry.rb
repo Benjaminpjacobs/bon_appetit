@@ -45,6 +45,23 @@ class Pantry
   def add_to_cookbook(recipe)
     @cookbook << recipe
   end
+
+  def what_can_i_make
+    possibilities = find_recipies
+    possibilities.map{|recipe| recipe.name}
+  end
+
+  def find_recipies
+    @cookbook.select do |recipe|
+      have_all_ingredients_and_quantities?(recipe)
+    end
+  end
+
+  def have_all_ingredients_and_quantities?(recipe)
+    recipe.ingredients.all? do |k, v|
+      @stock.keys.include?(k) && @stock[k] >= v
+    end
+  end
   
   private
 

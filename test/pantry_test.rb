@@ -141,9 +141,15 @@ class PantryTest < Minitest::Test
     p.restock("Pickles", 40)
     p.restock("Raw nuts", 20)
     p.restock("Salt", 20)
+    p.restock("Cucumbers", 30)
 
     actual = p.what_can_i_make
     expected = ["Pickles", "Peanuts"]
+
+    assert_equal expected, actual
+  end
+
+  def test_how_man
     
   end
 end
