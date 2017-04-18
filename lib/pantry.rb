@@ -9,7 +9,7 @@ class Pantry
   end
 
   def stock_check(item)
-    if @stock[item].nil?
+    if no_stock?(item)
       0
     else
       @stock[item]
@@ -17,7 +17,7 @@ class Pantry
   end
 
   def restock(item, amount)
-    if @stock[item]
+    if already_stocked?(item)
       @stock[item] += amount
     else
       @stock[item] = amount
@@ -29,29 +29,52 @@ class Pantry
     add_or_update(to_add)
   end
 
-  def update_shopping_list(to_add)
-    to_add.each do |item, qty|
-      new_item_or_update(item, qty)
-    end
+  def print_shopping_list
+    @shopping_list.map do |k, v|
+      format_list(k, v)
+    end.join
   end
 
-  def print_shopping_list
-    list = @shopping_list.map do |k, v|
-      "* #{k}: #{v}\n"
-    end
-    list.join
-  end
-  
   def add_to_cookbook(recipe)
     @cookbook << recipe
   end
 
   def what_can_i_make
-    possibilities = find_recipies
-    possibilities.map{|recipe| recipe.name}
+    recipes = find_recipes
+    recipes.map{|recipe| recipe.name}
   end
 
-  def find_recipies
+  def how_many_can_i_make
+    recipes = find_recipes
+    per = recipes.map do |recipe|
+      how_many_per(recipe)
+    end
+    recipes.map{|recipe|recipe.name}.zip(per).to_h
+  end
+  
+  private
+
+  def format_list(k, v)
+    if last_item?(k)
+      "* #{k}: #{v}"
+    else
+      "* #{k}: #{v}\n"
+    end
+  end
+
+  def last_item?(k)
+    k ==  @shopping_list.keys.last
+  end
+
+  def no_stock?(item)
+    @stock[item].nil?
+  end
+
+  def already_stocked?(item)
+    @stock[item]
+  end
+
+  def find_recipes
     @cookbook.select do |recipe|
       have_all_ingredients_and_quantities?(recipe)
     end
@@ -63,22 +86,12 @@ class Pantry
     end
   end
 
-  def how_many_can_i_make
-    possibilities = find_recipies
-    per = possibilities.map do |recipe|
-      how_many_per(recipe)
-    end
-    possibilities.map{|recipe|recipe.name}.zip(per).to_h
-  end
-
   def how_many_per(recipe)
     recipe.ingredients.map do |k, v|
       @stock[k]/v
     end.min
   end
   
-  private
-
   def new_item_or_update(item, qty)
     if @shopping_list.keys.include?(item)
       @shopping_list[item] += qty
@@ -94,8 +107,11 @@ class Pantry
       update_shopping_list(to_add)
     end
   end
-  
 
-
+  def update_shopping_list(to_add)
+    to_add.each do |item, qty|
+      new_item_or_update(item, qty)
+    end
+  end
 
 end

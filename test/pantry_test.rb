@@ -83,7 +83,7 @@ class PantryTest < Minitest::Test
     r2.add_ingredient("Cheese", 5)
     p.add_to_shopping_list(r2)
     actual = p.print_shopping_list
-    expected = "* Cheese: 25\n* Flour: 20\n* Noodles: 10\n* Sauce: 10\n"
+    expected = "* Cheese: 25\n* Flour: 20\n* Noodles: 10\n* Sauce: 10"
     assert_equal expected, actual
   end
 
