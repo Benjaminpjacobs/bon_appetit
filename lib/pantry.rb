@@ -1,4 +1,3 @@
-require 'pry'
 class Pantry
   attr_reader :stock, :shopping_list, :cookbook
 
@@ -41,18 +40,30 @@ class Pantry
 
   def what_can_i_make
     recipes = find_recipes
-    recipes.map{|recipe| recipe.name}
+    collect_recipe_names(recipes)
   end
 
   def how_many_can_i_make
     recipes = find_recipes
-    per = recipes.map do |recipe|
+    how_many = how_many_per_recipe(recipes)
+    display_results(recipes, how_many)
+  end
+
+  private
+
+  def display_results(recipes, amounts)
+    recipes.map{|recipe|recipe.name}.zip(amounts).to_h
+  end
+
+  def how_many_per_recipe(recipes)
+    recipes.map do |recipe|
       how_many_per(recipe)
     end
-    recipes.map{|recipe|recipe.name}.zip(per).to_h
   end
-  
-  private
+
+  def collect_recipe_names(recipes)
+    recipes.map{|recipe| recipe.name}
+  end
 
   def format_list(k, v)
     if last_item?(k)
@@ -91,7 +102,7 @@ class Pantry
       @stock[k]/v
     end.min
   end
-  
+
   def new_item_or_update(item, qty)
     if @shopping_list.keys.include?(item)
       @shopping_list[item] += qty
