@@ -36,6 +36,7 @@ class PantryTest < Minitest::Test
     p.restock("Cheese", 20)
     assert_equal 30, p.stock_check("Cheese")
   end
+
   def test_it_has_shopping_list
     p = Pantry.new
     actual = p.shopping_list
@@ -180,6 +181,6 @@ class PantryTest < Minitest::Test
     expected = {"Pickles" => 1, "Peanuts" => 2}
 
     assert_equal expected, actual
-    
   end
+  
 end
